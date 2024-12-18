@@ -71,15 +71,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> userWithCards(Long userId) {
         User user = this.userRepository.findById(userId).orElse(null);
-        List<Card> list = this.cardRepository.getAllByUserId(userId);
+        //List<Card> list = this.cardRepository.getAllByUserId(userId);
         if (user != null) {
-            UserDto dto = this.userMapper.toDto(user);
+           /* UserDto dto = this.userMapper.toDto(user);
             UserDto.UserWithCards userWithCards = this.userMapper.userWithCards(dto);
             if (list != null && !list.isEmpty()) {
                 userWithCards.setCards(
                         this.cardMapper.dtoList(list)
                 );
-            }
+            }*/
+            UserDto.UserWithCards userWithCards = this.userMapper.getUserWithCards(user, cardMapper, cardRepository);
             return ResponseEntity.ok(userWithCards);
         }
         return ResponseEntity.badRequest().body("User is not found");
