@@ -15,4 +15,6 @@ public interface UserMapper {
     void toUpdate(@MappingTarget User user, UserDto.UpdateUser dto);
 
     List<UserDto> dtoList(List<User> users);
+
+    UserDto.UserWithCards userWithCards(UserDto dto);
 }

@@ -1,6 +1,9 @@
 package org.example.example_mapstruct.user;
 
 import lombok.RequiredArgsConstructor;
+import org.example.example_mapstruct.card.Card;
+import org.example.example_mapstruct.card.CardMapper;
+import org.example.example_mapstruct.card.CardRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +14,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final CardRepository cardRepository;
     private final UserRepository userRepository;
+    private final CardMapper cardMapper;
     private final UserMapper userMapper;
 
 
@@ -61,5 +66,22 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.ok("USER UPDATED");
         }
         return ResponseEntity.ok("USER IS NOT FOUND");
+    }
+
+    @Override
+    public ResponseEntity<?> userWithCards(Long userId) {
+        User user = this.userRepository.findById(userId).orElse(null);
+        List<Card> list = this.cardRepository.getAllByUserId(userId);
+        if (user != null) {
+            UserDto dto = this.userMapper.toDto(user);
+            UserDto.UserWithCards userWithCards = this.userMapper.userWithCards(dto);
+            if (list != null && !list.isEmpty()) {
+                userWithCards.setCards(
+                        this.cardMapper.dtoList(list)
+                );
+            }
+            return ResponseEntity.ok(userWithCards);
+        }
+        return ResponseEntity.badRequest().body("User is not found");
     }
 }

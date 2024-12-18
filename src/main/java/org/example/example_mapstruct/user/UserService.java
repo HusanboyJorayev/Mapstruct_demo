@@ -15,4 +15,6 @@ public interface UserService {
     ResponseEntity<?> delete(Long id);
 
     ResponseEntity<?> update(Long id, UserDto.UpdateUser dto);
+
+    ResponseEntity<?>userWithCards(Long userId);
 }

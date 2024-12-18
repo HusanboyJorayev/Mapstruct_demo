@@ -36,4 +36,9 @@ public class UserController {
                                     @RequestBody UserDto.UpdateUser dto) {
         return this.userService.update(id, dto);
     }
+
+    @GetMapping("/userWithCards")
+    public ResponseEntity<?> userWithCards(@RequestParam("userId") Long userId) {
+        return this.userService.userWithCards(userId);
+    }
 }
