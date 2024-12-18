@@ -1,7 +1,6 @@
 package org.example.example_mapstruct.user;
 
 import lombok.RequiredArgsConstructor;
-import org.example.example_mapstruct.card.Card;
 import org.example.example_mapstruct.card.CardMapper;
 import org.example.example_mapstruct.card.CardRepository;
 import org.springframework.http.ResponseEntity;
@@ -71,15 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> userWithCards(Long userId) {
         User user = this.userRepository.findById(userId).orElse(null);
-        //List<Card> list = this.cardRepository.getAllByUserId(userId);
         if (user != null) {
-           /* UserDto dto = this.userMapper.toDto(user);
-            UserDto.UserWithCards userWithCards = this.userMapper.userWithCards(dto);
-            if (list != null && !list.isEmpty()) {
-                userWithCards.setCards(
-                        this.cardMapper.dtoList(list)
-                );
-            }*/
             UserDto.UserWithCards userWithCards = this.userMapper.getUserWithCards(user, cardMapper, cardRepository);
             return ResponseEntity.ok(userWithCards);
         }
