@@ -1,5 +1,6 @@
 package org.example.example_mapstruct.user;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class UserDto {
     @Builder
     @Data
     public static class CreateUser {
+        @NotBlank(message = "firstname cannot be null or empty")
         private String firstname;
         private String lastname;
         private String email;

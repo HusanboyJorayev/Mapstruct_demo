@@ -1,5 +1,6 @@
 package org.example.example_mapstruct.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,8 +12,9 @@ public class UserController {
     private final UserService userService;
 
 
+
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody UserDto.CreateUser dto) {
+    public ResponseEntity<?> create(@RequestBody @Valid UserDto.CreateUser dto) {
         return this.userService.create(dto);
     }
 

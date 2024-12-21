@@ -1,6 +1,8 @@
 package org.example.example_mapstruct.card;
 
 import lombok.RequiredArgsConstructor;
+import org.example.example_mapstruct.dto.ErrorDto;
+import org.example.example_mapstruct.dto.Validations;
 import org.example.example_mapstruct.user.User;
 import org.example.example_mapstruct.user.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +17,17 @@ import java.util.List;
 public class CardServiceImpl implements CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
+    private final Validations validations;
     private final CardMapper cardMapper;
 
 
     @Override
     public ResponseEntity<?> create(CardDto.CreateCard dto) {
+        List<ErrorDto> errors = this.validations.validCard(dto);
+        if (errors != null && !errors.isEmpty()) {
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         User user = this.userRepository.findById(dto.getUserId()).orElse(null);
         if (user != null) {
             Card card = this.cardMapper.toEntity(dto);
@@ -61,6 +69,7 @@ public class CardServiceImpl implements CardService {
         Card card = this.cardRepository.findById(id).orElse(null);
         if (card != null) {
             this.cardRepository.delete(card);
+            return ResponseEntity.badRequest().body("Card is deleted successfully");
         }
         return ResponseEntity.badRequest().body("Card not found");
     }
@@ -82,6 +91,7 @@ public class CardServiceImpl implements CardService {
             if (list != null && !list.isEmpty()) {
                 return ResponseEntity.ok(this.cardMapper.dtoList(list));
             }
+            return ResponseEntity.ok(this.cardMapper.dtoList(new ArrayList<>()));
         }
         return ResponseEntity.badRequest().body("User not found");
     }

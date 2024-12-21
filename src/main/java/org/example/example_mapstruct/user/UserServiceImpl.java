@@ -3,6 +3,8 @@ package org.example.example_mapstruct.user;
 import lombok.RequiredArgsConstructor;
 import org.example.example_mapstruct.card.CardMapper;
 import org.example.example_mapstruct.card.CardRepository;
+import org.example.example_mapstruct.dto.ErrorDto;
+import org.example.example_mapstruct.dto.Validations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +19,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final CardMapper cardMapper;
     private final UserMapper userMapper;
+    private final Validations validations;
 
 
     @Override
     public ResponseEntity<?> create(UserDto.CreateUser dto) {
+        List<ErrorDto> errors = this.validations.validUser(dto);
+        if (errors != null && !errors.isEmpty()) {
+            return ResponseEntity.badRequest().body(errors);
+        }
+
         User user = this.userMapper.toEntity(dto);
         user.setCreatedAt(LocalDateTime.now());
         this.userRepository.save(user);

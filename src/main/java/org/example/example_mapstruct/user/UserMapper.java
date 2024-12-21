@@ -4,11 +4,8 @@ import org.example.example_mapstruct.card.CardDto;
 import org.example.example_mapstruct.card.CardMapper;
 import org.example.example_mapstruct.card.CardRepository;
 import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Set;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,7 +13,6 @@ import java.util.stream.Stream;
 public interface UserMapper {
 
 
-    //@Mapping(ignore = true, target = "cards")
     UserDto toDto(User user);
 
     User toEntity(UserDto.CreateUser dto);
@@ -26,8 +22,6 @@ public interface UserMapper {
 
     List<UserDto> dtoList(List<User> users);
 
-
-    UserDto.UserWithCards userWithCards(UserDto dto);
 
     @Mapping(target = "cards", expression = "java(cardRepository.getAllByUserId(user.getId())\n" +
             "                .stream().map(cardMapper::toDto).toList())")
